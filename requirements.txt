@@ -17,7 +17,6 @@ tqdm
 pyyaml
 py7zr
 
-# AWS 
 boto3
 mypy-boto3-s3
 
