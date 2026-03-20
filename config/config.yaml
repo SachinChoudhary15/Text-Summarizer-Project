@@ -1,5 +1,3 @@
-
-
 artifacts_root: artifacts
 
 data_ingestion:
@@ -8,8 +6,56 @@ data_ingestion:
   local_data_file: artifacts/data_ingestion/data.zip
   unzip_dir: artifacts/data_ingestion
 
-
 data_validation:
   root_dir: artifacts/data_validation
   STATUS_FILE: artifacts/data_validation/status.txt
   ALL_REQUIRED_FILES: ["train", "test", "validation"]
+
+data_transformation:
+  root_dir: artifacts/data_transformation
+  data_path: artifacts/data_ingestion/samsum_dataset
+  # tokenizer_name: google/pegasus-cnn_dailymail
+  tokenizer_name: t5-small
+
+# model_trainer:
+#   root_dir: artifacts/model_trainer
+#   data_path: artifacts/data_transformation/samsum_dataset
+#   # model_ckpt: google/pegasus-cnn_dailymail
+#   model_ckpt: google/pegasus-cnn_dailymail
+
+#   num_train_epochs: 1
+#   warmup_steps: 500
+#   per_device_train_batch_size: 1
+#   per_device_eval_batch_size: 1
+#   weight_decay: 0.01
+#   logging_steps: 10
+
+#   eval_strategy: steps
+#   eval_steps: 500
+#   gradient_accumulation_steps: 16
+
+model_trainer:
+  root_dir: artifacts/model_trainer
+  data_path: artifacts/data_transformation/samsum_dataset
+
+  model_ckpt: t5-small
+
+  num_train_epochs: 1
+  warmup_steps: 100
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  weight_decay: 0.01
+  logging_steps: 10
+
+  eval_strategy: steps
+  eval_steps: 100
+  gradient_accumulation_steps: 1
+
+
+
+model_evaluation:
+  root_dir: artifacts/model_evaluation
+  data_path: artifacts/data_transformation/samsum_dataset
+  model_path: artifacts/model_trainer/model
+  tokenizer_path: artifacts/model_trainer/tokenizer
+  metric_file_name: artifacts/model_evaluation/metrics.csv
