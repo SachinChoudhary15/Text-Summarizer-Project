@@ -6,6 +6,12 @@ from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from TextSummarizer.pipeline.prediction import PredictionPipeline
 
+import sys
+import os
+
+sys.path.append(os.path.abspath("."))
+
+
 app = FastAPI(
     title="Text Summarization API",
     description="API for generating summaries using trained model",
