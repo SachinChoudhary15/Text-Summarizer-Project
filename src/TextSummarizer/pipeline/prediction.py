@@ -10,13 +10,13 @@ class PredictionPipeline:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         # load tokenizer & model
-        self.tokenizer = AutoTokenizer.from_pretrained(self.config.tokenizer_path)
-        self.model = AutoModelForSeq2SeqLM.from_pretrained(self.config.model_path)
+        self.tokenizer = AutoTokenizer.from_pretrained("Sachin151619/text-summarizer-t5")
+
+        self.model = AutoModelForSeq2SeqLM.from_pretrained("Sachin151619/text-summarizer-t5")
         self.model.to(self.device)
 
     
     def predict(self, text):
-        # T5 ke liye prefix zaruri hai
         input_text = "summarize: " + text
 
         print("Dialogue:")
