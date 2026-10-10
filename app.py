@@ -1,15 +1,18 @@
 
+import os
+import sys
 
 from fastapi import FastAPI
 import uvicorn
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
+
+# Add the src directory before importing TextSummarizer
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SRC_DIR = os.path.join(BASE_DIR, "src")
+sys.path.insert(0, SRC_DIR)
+
 from TextSummarizer.pipeline.prediction import PredictionPipeline
-
-import sys
-import os
-
-sys.path.append(os.path.abspath("."))
 
 
 app = FastAPI(
@@ -24,6 +27,7 @@ pipeline = PredictionPipeline()
 class TextRequest(BaseModel):
     text: str
 
+
 @app.get("/", tags=["Home"])
 async def home():
     return RedirectResponse(url="/docs")
@@ -33,13 +37,11 @@ async def home():
 async def predict(request: TextRequest):
     try:
         summary = pipeline.predict(request.text)
-
         return {
             "status": "success",
             "input_text": request.text,
             "summary": summary
         }
-
     except Exception as e:
         return {
             "status": "error",
@@ -52,6 +54,5 @@ async def health_check():
     return {"status": "API is running"}
 
 
-# Run server
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=7860)
